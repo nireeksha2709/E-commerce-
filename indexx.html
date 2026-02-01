@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Listing Page</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #e6d9ff, #dff3ff);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        select {
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .product h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .product p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h1>E-commerce Page</h1>
+
+<div class="controls">
+    <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="Gadgets">Gadgets</option>
+        <option value="Stationery">Stationery</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Accessories">Accessories</option>
+    </select>
+
+    <select id="sortOption">
+        <option value="">Sort By</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+        <option value="nameAsc">Name: A to Z</option>
+        <option value="nameDesc">Name: Z to A</option>
+        <option value="ratingAsc">Rating: Low to High</option>
+        <option value="ratingDesc">Rating: High to Low</option>
+    </select>
+</div>
+
+<div class="products" id="productList"></div>
+
+<script>
+    const products = [
+        { name: "Wireless Mouse", price: 600, rating: 4.3, category: "Gadgets" },
+        { name: "USB Pen Drive", price: 450, rating: 4.1, category: "Gadgets" },
+        { name: "Bluetooth Earbuds", price: 1800, rating: 4.5, category: "Gadgets" },
+        { name: "Calculator", price: 900, rating: 4.4, category: "Gadgets" },
+        { name: "Power Bank", price: 1500, rating: 4.2, category: "Gadgets" },
+
+        { name: "Notebook Set", price: 300, rating: 4.0, category: "Stationery" },
+        { name: "Ball Pens Pack", price: 150, rating: 3.9, category: "Stationery" },
+        { name: "Highlighters", price: 220, rating: 4.1, category: "Stationery" },
+        { name: "File Folder", price: 180, rating: 4.0, category: "Stationery" },
+        { name: "Sticky Notes", price: 120, rating: 3.8, category: "Stationery" },
+
+        { name: "Hoodie", price: 2200, rating: 4.6, category: "Clothing" },
+        { name: "Casual T-Shirt", price: 800, rating: 4.2, category: "Clothing" },
+        { name: "Jeans", price: 1900, rating: 4.4, category: "Clothing" },
+        { name: "College Kurti", price: 1400, rating: 4.3, category: "Clothing" },
+        { name: "Track Pants", price: 1100, rating: 4.1, category: "Clothing" },
+
+        { name: "Backpack", price: 1600, rating: 4.5, category: "Accessories" },
+        { name: "Water Bottle", price: 500, rating: 4.2, category: "Accessories" },
+        { name: "Wrist Watch", price: 2500, rating: 4.4, category: "Accessories" },
+        { name: "Sunglasses", price: 1200, rating: 4.1, category: "Accessories" },
+        { name: "Wallet", price: 700, rating: 4.0, category: "Accessories" }
+    ];
+
+    const productList = document.getElementById("productList");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const sortOption = document.getElementById("sortOption");
+
+    function displayProducts(list) {
+        productList.innerHTML = "";
+
+        list.forEach(p => {
+            const card = document.createElement("div");
+            card.className = "product";
+
+            card.innerHTML = `
+                <h3>${p.name}</h3>
+                <p>Price: ₹${p.price}</p>
+                <p>Rating: ${p.rating}</p>
+                <p>Category: ${p.category}</p>
+            `;
+
+            productList.appendChild(card);
+        });
+    }
+
+    function updateProducts() {
+        let result = [...products];
+
+        if (categoryFilter.value !== "all") {
+            result = result.filter(p => p.category === categoryFilter.value);
+        }
+
+        switch (sortOption.value) {
+            case "priceAsc": result.sort((a,b) => a.price - b.price); break;
+            case "priceDesc": result.sort((a,b) => b.price - a.price); break;
+            case "nameAsc": result.sort((a,b) => a.name.localeCompare(b.name)); break;
+            case "nameDesc": result.sort((a,b) => b.name.localeCompare(a.name)); break;
+            case "ratingAsc": result.sort((a,b) => a.rating - b.rating); break;
+            case "ratingDesc": result.sort((a,b) => b.rating - a.rating); break;
+        }
+
+        displayProducts(result);
+    }
+
+    categoryFilter.addEventListener("change", updateProducts);
+    sortOption.addEventListener("change", updateProducts);
+
+    displayProducts(products);
+</script>
+
+</body>
+</html>
